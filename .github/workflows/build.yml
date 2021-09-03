@@ -23,6 +23,15 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Create Volume
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: sudo docker volume create lanenhanced_data || true
+          host: ${{ secrets.SERVER_HOST }}
+          port: ${{ secrets.SERVER_PORT }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SERVER_PASS }}
+
       - name: Remove existing Container
         uses: garygrossgarten/github-action-ssh@release
         with:
@@ -35,7 +44,7 @@ jobs:
       - name: Start new Container
         uses: garygrossgarten/github-action-ssh@release
         with:
-          command: echo ${{ secrets.GHCR_PAT }} | sudo docker login ghcr.io -u ${{ github.actor }} --password-stdin && sudo docker pull ghcr.io/sharknoon/lanenhanced-backend && sudo docker run -d --name lanenhanced-backend --network traefik-net --restart=always ghcr.io/sharknoon/lanenhanced-backend
+          command: echo ${{ secrets.GHCR_PAT }} | sudo docker login ghcr.io -u ${{ github.actor }} --password-stdin && sudo docker pull ghcr.io/sharknoon/lanenhanced-backend && sudo docker run -d --name lanenhanced-backend --network traefik-net --restart=always -v lanenhanced_data:/app/bin/data ghcr.io/sharknoon/lanenhanced-backend
           host: ${{ secrets.SERVER_HOST }}
           port: ${{ secrets.SERVER_PORT }}
           username: ${{ secrets.SERVER_USER }}

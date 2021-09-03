@@ -5,10 +5,15 @@ import org.dizitart.kno2.getRepository
 import org.dizitart.kno2.nitrite
 import org.dizitart.no2.NitriteId
 import org.dizitart.no2.objects.filters.ObjectFilters.eq
+import java.nio.file.Files
 import java.nio.file.Paths
 
 private val db = nitrite {
-    file = Paths.get("database.db").toAbsolutePath().toFile()
+    file = Paths.get("data")
+        .toAbsolutePath()
+        .also { Files.createDirectories(it) }
+        .resolve("database.db")
+        .toFile()
 }
 
 private val gameRepository = db.getRepository<Game> { }
