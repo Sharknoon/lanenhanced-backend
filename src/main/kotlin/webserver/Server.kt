@@ -3,6 +3,7 @@ package webserver
 import com.google.gson.Gson
 import database.getGame
 import io.ktor.application.*
+import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -15,6 +16,9 @@ private val gson = Gson()
 
 fun main() {
     embeddedServer(Netty, port = 8080) {
+        install(CORS) {
+            anyHost()
+        }
         routing {
             route("/api") {
                 route("/games") {
