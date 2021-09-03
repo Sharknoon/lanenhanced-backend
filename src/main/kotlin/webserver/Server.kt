@@ -16,21 +16,23 @@ private val gson = Gson()
 fun main() {
     embeddedServer(Netty, port = 8080) {
         routing {
-            route("/games") {
-                get {
-                    getAllGames()
-                }
-                post("/new") {
-                    newGame()
-                }
-                get("/{id}") {
-                    getGame()
-                }
-                patch("/{id}") {
-                    editGame()
-                }
-                delete("/{id}") {
-                    deleteGame()
+            route("/api") {
+                route("/games") {
+                    get {
+                        getAllGames()
+                    }
+                    post("/new") {
+                        newGame()
+                    }
+                    get("/{id}") {
+                        getGame()
+                    }
+                    patch("/{id}") {
+                        editGame()
+                    }
+                    delete("/{id}") {
+                        deleteGame()
+                    }
                 }
             }
         }
@@ -52,7 +54,7 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.newGame() {
     val affected = database.newGame(game)
     if (affected == 1) {
         call.respond(gson.toJson(game))
-    }else{
+    } else {
         call.respond(HttpStatusCode.InternalServerError)
     }
     call.respond(if (affected == 1) HttpStatusCode.OK else HttpStatusCode.InternalServerError)
