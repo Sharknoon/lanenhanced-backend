@@ -16,10 +16,6 @@ private val gson = Gson()
 
 fun main() {
     embeddedServer(Netty, port = 8080) {
-        install(CORS) {
-            method(HttpMethod.Options)
-            anyHost()
-        }
         routing {
             route("/api") {
                 route("/games") {
